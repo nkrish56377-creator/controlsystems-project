@@ -9,97 +9,20 @@
 </head>
 <body>
 
-    <!-- ANIMATED BACKGROUND LAYERS -->
     <div class="bg-grid"></div>
     <div class="bg-glow"></div>
 
-    <!-- SCANLINE OVERLAY -->
-    <div class="scanlines"></div>
+    <h1>🚗 Virtual Parking System</h1>
+    <p style="color:#94a3b8;">Smart IoT Parking Dashboard</p>
 
-    <!-- WRAPPER -->
-    <div class="page-wrapper">
-
-        <!-- HEADER -->
-        <header class="site-header">
-            <div class="header-badge">
-                <span class="live-dot"></span>
-                <span>LIVE SYSTEM</span>
-            </div>
-            <h1>🚗 Virtual Parking System</h1>
-            <p style="color:#94a3b8;">Smart IoT Parking Dashboard</p>
-        </header>
-
-        <!-- STATS ROW -->
-        <div class="stats-row">
-            <div class="stat-card">
-                <div class="stat-label">Total Slots</div>
-                <div class="stat-value" id="stat-total">—</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Available</div>
-                <div class="stat-value green" id="stat-available">—</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Occupied</div>
-                <div class="stat-value red" id="stat-booked">—</div>
-            </div>
-        </div>
-
-        <!-- CONTROLS -->
-        <div class="controls">
-            <button id="bookButton">⚡ Book Slot</button>
-            <button id="resetButton">🔄 Reset Parking</button>
-            <p id="message"></p>
-        </div>
-
-        <!-- ROAD DIVIDER -->
-        <div class="road-divider">
-            <span class="road-label">◀ ENTRY LANE</span>
-            <div class="road-dashes"></div>
-            <span class="road-label">EXIT LANE ▶</span>
-        </div>
-
-        <!-- PARKING GRID -->
-        <div id="parking-lot" class="parking-lot"></div>
-
-        <!-- FOOTER -->
-        <footer class="site-footer">
-            <span>MPMC IoT Project</span>
-            <span class="footer-sep">◆</span>
-            <span>Real-Time Slot Management</span>
-        </footer>
+    <div class="controls">
+        <button id="bookButton">⚡ Book Slot</button>
+        <button id="resetButton">🔄 Reset Parking</button>
+        <p id="message"></p>
     </div>
 
+    <div id="parking-lot" class="parking-lot"></div>
+
     <script src="script.js"></script>
-
-    <!-- STATS UPDATER: reads existing slots and updates counters -->
-    <script>
-        (function () {
-            function updateStats() {
-                const all   = document.querySelectorAll('.slot');
-                const booked = document.querySelectorAll('.slot.booked');
-                const avail  = all.length - booked.length;
-                const tEl = document.getElementById('stat-total');
-                const aEl = document.getElementById('stat-available');
-                const bEl = document.getElementById('stat-booked');
-                if (tEl) tEl.textContent = all.length || '—';
-                if (aEl) aEl.textContent = avail || '—';
-                if (bEl) bEl.textContent = booked.length;
-
-                // stagger-animate new slots
-                all.forEach((s, i) => {
-                    if (!s.dataset.animated) {
-                        s.style.animationDelay = (i * 0.04) + 's';
-                        s.classList.add('slot-enter');
-                        s.dataset.animated = '1';
-                    }
-                });
-            }
-            // observe DOM changes so stats stay in sync
-            const observer = new MutationObserver(updateStats);
-            observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
-            updateStats();
-        })();
-    </script>
 </body>
 </html>
