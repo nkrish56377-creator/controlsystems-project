@@ -1,31 +1,95 @@
 body {
-  font-family: Arial;
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: #e2e8f0;
   text-align: center;
 }
 
-.parking-lot {
-  display: grid;
-  grid-template-columns: repeat(5, 80px);
-  gap: 10px;
-  justify-content: center;
+/* TITLE */
+h1 {
   margin-top: 20px;
+  font-size: 2.5rem;
+  color: #22c55e;
+  text-shadow: 0 0 10px #22c55e;
 }
 
-.slot {
-  width: 80px;
-  height: 80px;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* CONTROLS */
+.controls {
+  margin: 20px;
+}
+
+/* BUTTONS */
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
   border-radius: 8px;
+  background: #0ea5e9;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 10px #0ea5e9;
+}
+
+button:hover {
+  background: #38bdf8;
+  box-shadow: 0 0 20px #38bdf8;
+}
+
+button:disabled {
+  background: #334155;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* MESSAGE */
+#message {
+  margin-top: 10px;
   font-weight: bold;
 }
 
-.available {
-  background-color: green;
+/* GRID */
+.parking-lot {
+  display: grid;
+  grid-template-columns: repeat(5, 90px);
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
 }
 
+/* SLOT BOX */
+.slot {
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: 0.3s;
+  border: 2px solid transparent;
+}
+
+/* AVAILABLE */
+.available {
+  background: #16a34a;
+  box-shadow: 0 0 10px #22c55e;
+}
+
+.available:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #22c55e;
+}
+
+/* BOOKED */
 .booked {
-  background-color: red;
+  background: #dc2626;
+  box-shadow: 0 0 10px #ef4444;
+}
+
+.booked:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ef4444;
 }
