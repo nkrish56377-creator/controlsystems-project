@@ -11,29 +11,28 @@ async function fetchSlots() {
         const res = await fetch(`${API_URL}/status`);
         const slots = await res.json();
 
-        parkingLot.innerHTML = '';
+        // First time: build the grid
+        if (parkingLot.children.length !== slots.length) {
+            parkingLot.innerHTML = '';
+            slots.forEach((isBooked, index) => {
+                const div = document.createElement('div');
+                div.classList.add('slot');
+                div.id = `slot-${index}`;
+                div.textContent = `Slot ${index + 1}`;
+                parkingLot.appendChild(div);
+            });
+        }
 
+        // Every refresh: just update classes and onclick
         let allBooked = true;
-
         slots.forEach((isBooked, index) => {
-            const div = document.createElement('div');
-            div.classList.add('slot');
-
-            if (isBooked) {
-                div.classList.add('booked');
-                div.textContent = `Slot ${index + 1}`;
-                div.onclick = () => releaseSlot(index + 1);
-            } else {
-                div.classList.add('available');
-                div.textContent = `Slot ${index + 1}`;
-                allBooked = false;
-            }
-
-            parkingLot.appendChild(div);
+            const div = document.getElementById(`slot-${index}`);
+            div.className = 'slot ' + (isBooked ? 'booked' : 'available');
+            div.onclick = isBooked ? () => releaseSlot(index + 1) : null;
+            if (!isBooked) allBooked = false;
         });
 
         bookButton.disabled = allBooked;
-
     } catch (err) {
         messageEl.textContent = "Server Error";
         messageEl.style.color = "red";
