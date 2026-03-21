@@ -2,20 +2,19 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
-
 app.use(express.json());
 
-// ✅ Serve static files (IMPORTANT)
+// serve frontend files
 app.use(express.static(__dirname));
 
 let parkingSlots = new Array(20).fill(false);
 
-// ✅ GET all slots
+// ✅ GET ALL SLOTS
 app.get("/status", (req, res) => {
   res.json(parkingSlots);
 });
 
-// ✅ BOOK SLOT (MATCHES YOUR JS)
+// ✅ BOOK SLOT
 app.post("/book", (req, res) => {
   for (let i = 0; i < parkingSlots.length; i++) {
     if (!parkingSlots[i]) {
@@ -34,7 +33,7 @@ app.post("/book", (req, res) => {
   });
 });
 
-// ✅ RELEASE SLOT (MATCHES YOUR JS)
+// ✅ RELEASE SLOT
 app.post("/release/:slot", (req, res) => {
   const slotIndex = parseInt(req.params.slot) - 1;
 
@@ -53,10 +52,19 @@ app.post("/release/:slot", (req, res) => {
   });
 });
 
-// ✅ ROOT ROUTE (VERY IMPORTANT)
+// ✅ RESET ALL SLOTS
+app.post("/reset", (req, res) => {
+  parkingSlots.fill(false);
+
+  res.json({
+    success: true,
+    message: "All slots reset"
+  });
+});
+
+// ✅ HOME PAGE
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// ✅ START SERVER
 app.listen(3000, () => console.log("Server running"));
