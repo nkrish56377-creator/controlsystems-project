@@ -1,22 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>PArking System</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 🔥 TITLE -->
+    <title>Parking System</title>
+
+    <!-- 🔥 FONT (TECH STYLE) -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>Virtual Parking System</h1>
+    <!-- 🔥 HEADER -->
+    <h1>🚗 Virtual Parking System</h1>
+    <p style="color:#94a3b8;">Smart IoT Parking Dashboard</p>
 
-<div class="controls">
-  <button id="bookButton">Book Slot</button>
-  <button id="resetButton">Reset Parking</button>
-  <p id="message"></p>
-</div>
+    <!-- 🔥 CONTROLS -->
+    <div class="controls">
+        <button id="bookButton">⚡ Book Slot</button>
+        <button id="resetButton">🔄 Reset Parking</button>
+        <p id="message"></p>
+    </div>
 
-<div id="parking-lot" class="parking-lot"></div>
+    <!-- 🔥 PARKING GRID -->
+    <div id="parking-lot" class="parking-lot"></div>
 
-<script src="script.js"></script>
+    <!-- JS -->
+    <script src="script.js"></script>
 
 </body>
 </html>
