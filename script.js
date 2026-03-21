@@ -2,9 +2,10 @@ const API_URL = 'https://mpmc-project.onrender.com';
 
 const parkingLot = document.getElementById('parking-lot');
 const bookButton = document.getElementById('bookButton');
+const resetButton = document.getElementById('resetButton');
 const messageEl = document.getElementById('message');
 
-// ---------------- FETCH SLOTS ----------------
+// FETCH SLOTS
 async function fetchSlots() {
     try {
         const res = await fetch(`${API_URL}/status`);
@@ -15,36 +16,23 @@ async function fetchSlots() {
         let allBooked = true;
 
         slots.forEach((isBooked, index) => {
-            const slotDiv = document.createElement('div');
-            const slotNumber = index + 1;
-
-            slotDiv.classList.add('slot');
+            const div = document.createElement('div');
+            div.classList.add('slot');
 
             if (isBooked) {
-                slotDiv.classList.add('booked');
-                slotDiv.textContent = `Slot ${slotNumber}`;
-
-                // click to release
-                slotDiv.onclick = () => releaseSlot(slotNumber);
-
+                div.classList.add('booked');
+                div.textContent = `Slot ${index + 1}`;
+                div.onclick = () => releaseSlot(index + 1);
             } else {
-                slotDiv.classList.add('available');
-                slotDiv.textContent = `Slot ${slotNumber}`;
+                div.classList.add('available');
+                div.textContent = `Slot ${index + 1}`;
                 allBooked = false;
             }
 
-            parkingLot.appendChild(slotDiv);
+            parkingLot.appendChild(div);
         });
 
-        // Disable button if full
         bookButton.disabled = allBooked;
-
-        if (allBooked) {
-            messageEl.textContent = "Parking Full";
-            messageEl.style.color = "red";
-        } else {
-            messageEl.textContent = "";
-        }
 
     } catch (err) {
         messageEl.textContent = "Server Error";
@@ -52,51 +40,51 @@ async function fetchSlots() {
     }
 }
 
-// ---------------- BOOK SLOT ----------------
+// BOOK SLOT
 async function bookSlot() {
-    try {
-        const res = await fetch(`${API_URL}/book`, {
-            method: "POST"
-        });
+    const res = await fetch(`${API_URL}/book`, { method: "POST" });
+    const data = await res.json();
 
-        const data = await res.json();
+    messageEl.textContent = data.message;
+    messageEl.style.color = data.success ? "green" : "red";
 
-        messageEl.textContent = data.message;
-        messageEl.style.color = data.success ? "green" : "red";
-
-        fetchSlots();
-
-    } catch (err) {
-        messageEl.textContent = "Booking Failed";
-        messageEl.style.color = "red";
-    }
+    fetchSlots();
 }
 
-// ---------------- RELEASE SLOT ----------------
-async function releaseSlot(slotNumber) {
-    try {
-        const res = await fetch(`${API_URL}/release/${slotNumber}`, {
-            method: "POST"
-        });
+// RELEASE SLOT
+async function releaseSlot(slot) {
+    const res = await fetch(`${API_URL}/release/${slot}`, {
+        method: "POST"
+    });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        messageEl.textContent = data.message;
-        messageEl.style.color = data.success ? "blue" : "red";
+    messageEl.textContent = data.message;
+    messageEl.style.color = data.success ? "blue" : "red";
 
-        fetchSlots();
-
-    } catch (err) {
-        messageEl.textContent = "Release Failed";
-        messageEl.style.color = "red";
-    }
+    fetchSlots();
 }
 
-// ---------------- EVENTS ----------------
+// RESET
+async function resetSlots() {
+    if (!confirm("Reset all slots?")) return;
+
+    const res = await fetch(`${API_URL}/reset`, {
+        method: "POST"
+    });
+
+    const data = await res.json();
+
+    messageEl.textContent = data.message;
+    messageEl.style.color = "blue";
+
+    fetchSlots();
+}
+
+// EVENTS
 bookButton.onclick = bookSlot;
+resetButton.onclick = resetSlots;
 
-// AUTO REFRESH (important)
+// AUTO REFRESH
 setInterval(fetchSlots, 2000);
-
-// INITIAL LOAD
 fetchSlots();
