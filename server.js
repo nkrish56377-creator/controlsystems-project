@@ -20,5 +20,9 @@ app.post("/book", (req, res) => {
   }
   res.json({ slot: -1 });
 });
-
+// ROOT ROUTE (fixes "Cannot GET /")
+app.get("/", (req, res) => {
+  res.send("Parking System Running ✅");
+});
 app.listen(3000, () => console.log("Server running"));
+
