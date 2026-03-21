@@ -1,105 +1,102 @@
-// *** IMPORTANT ***
-// If you test locally, use: 'http://localhost:3000'
-// After deploying, change this to your live server URL!
-const API_URL = 'https://mpmc-project.onrender.com'; 
+const API_URL = 'https://mpmc-project.onrender.com';
 
 const parkingLot = document.getElementById('parking-lot');
 const bookButton = document.getElementById('bookButton');
 const messageEl = document.getElementById('message');
 
-// Function to fetch and display the parking slots
+// ---------------- FETCH SLOTS ----------------
 async function fetchSlots() {
     try {
-        const response = await fetch(`${API_URL}/status`);
-        const slots = await response.json();
+        const res = await fetch(`${API_URL}/status`);
+        const slots = await res.json();
 
-        parkingLot.innerHTML = ''; // Clear existing slots
+        parkingLot.innerHTML = '';
+
         let allBooked = true;
 
         slots.forEach((isBooked, index) => {
             const slotDiv = document.createElement('div');
             const slotNumber = index + 1;
+
             slotDiv.classList.add('slot');
-            
+
             if (isBooked) {
                 slotDiv.classList.add('booked');
-                slotDiv.textContent = `Slot ${slotNumber} (Booked)`;
-                slotDiv.title = 'Click to release this slot';
-                // Add click event to release the slot
-                slotDiv.addEventListener('click', () => releaseSlot(slotNumber));
+                slotDiv.textContent = `Slot ${slotNumber}`;
+
+                // click to release
+                slotDiv.onclick = () => releaseSlot(slotNumber);
+
             } else {
                 slotDiv.classList.add('available');
-                slotDiv.textContent = `Slot ${slotNumber} (Free)`;
-                slotDiv.title = 'This slot is available';
-                allBooked = false; // We found at least one free slot
+                slotDiv.textContent = `Slot ${slotNumber}`;
+                allBooked = false;
             }
+
             parkingLot.appendChild(slotDiv);
         });
 
-        // Disable book button if all slots are booked
+        // Disable button if full
         bookButton.disabled = allBooked;
+
         if (allBooked) {
-            messageEl.textContent = 'Parking is full!';
-            messageEl.style.color = 'red';
+            messageEl.textContent = "Parking Full";
+            messageEl.style.color = "red";
+        } else {
+            messageEl.textContent = "";
         }
 
-    } catch (error) {
-        console.error('Error fetching slots:', error);
-        messageEl.textContent = 'Error connecting to server.';
-        messageEl.style.color = 'red';
+    } catch (err) {
+        messageEl.textContent = "Server Error";
+        messageEl.style.color = "red";
     }
 }
 
-// Function to book a slot
+// ---------------- BOOK SLOT ----------------
 async function bookSlot() {
     try {
-        const response = await fetch(`${API_URL}/book`, {
-            method: 'POST'
+        const res = await fetch(`${API_URL}/book`, {
+            method: "POST"
         });
-        const result = await response.json();
 
-        if (result.success) {
-            messageEl.textContent = result.message;
-            messageEl.style.color = 'green';
-        } else {
-            messageEl.textContent = result.message;
-            messageEl.style.color = 'red';
-        }
-        
-        fetchSlots(); // Refresh the parking lot view
-    } catch (error) {
-        console.error('Error booking slot:', error);
+        const data = await res.json();
+
+        messageEl.textContent = data.message;
+        messageEl.style.color = data.success ? "green" : "red";
+
+        fetchSlots();
+
+    } catch (err) {
+        messageEl.textContent = "Booking Failed";
+        messageEl.style.color = "red";
     }
 }
 
-// Function to release a slot
+// ---------------- RELEASE SLOT ----------------
 async function releaseSlot(slotNumber) {
-    if (!confirm(`Are you sure you want to release Slot ${slotNumber}?`)) {
-        return;
-    }
-
     try {
-        const response = await fetch(`${API_URL}/release/${slotNumber}`, {
-            method: 'POST'
+        const res = await fetch(`${API_URL}/release/${slotNumber}`, {
+            method: "POST"
         });
-        const result = await response.json();
 
-        if (result.success) {
-            messageEl.textContent = result.message;
-            messageEl.style.color = 'blue';
-        } else {
-            messageEl.textContent = result.message;
-            messageEl.style.color = 'red';
-        }
+        const data = await res.json();
 
-        fetchSlots(); // Refresh the parking lot view
-    } catch (error) {
-        console.error('Error releasing slot:', error);
+        messageEl.textContent = data.message;
+        messageEl.style.color = data.success ? "blue" : "red";
+
+        fetchSlots();
+
+    } catch (err) {
+        messageEl.textContent = "Release Failed";
+        messageEl.style.color = "red";
     }
 }
 
-// Add event listener to the book button
-bookButton.addEventListener('click', bookSlot);
+// ---------------- EVENTS ----------------
+bookButton.onclick = bookSlot;
 
-// Initial load
+// AUTO REFRESH (important)
+setInterval(fetchSlots, 2000);
+
+// INITIAL LOAD
 fetchSlots();
