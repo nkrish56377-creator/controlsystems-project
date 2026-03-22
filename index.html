@@ -29,15 +29,13 @@
             </div>
 
             <p id="login-error"></p>
-
             <button id="login-btn">⚡ LOGIN</button>
-
             <div class="login-footer">SECURED ACCESS · MPMC IoT PROJECT</div>
         </div>
     </div>
 
-    <!-- ── DASHBOARD (hidden until login) ── -->
-    <div id="dashboard" class="hidden">
+    <!-- ── DASHBOARD ── -->
+    <div id="dashboard" style="display:none">
         <h1>🚗 Virtual Parking System</h1>
         <p style="color:#94a3b8;">Smart IoT Parking Dashboard</p>
 
@@ -53,7 +51,6 @@
 
     <script src="script.js"></script>
     <script>
-        // ── CREDENTIALS (change these) ──
         const ADMIN_USER = 'admin';
         const ADMIN_PASS = 'parking123';
 
@@ -65,23 +62,22 @@
         const userInput = document.getElementById('username');
         const passInput = document.getElementById('password');
 
+        // Start with dashboard fully hidden
+        dashboard.style.display = 'none';
+
         // Auto-login if session active
         if (sessionStorage.getItem('parking-auth') === 'true') {
-            showDashboard(false);
+            overlay.style.display = 'none';
+            dashboard.style.display = 'block';
         }
 
-        function showDashboard(animate) {
-            if (animate) {
-                overlay.classList.add('fade-out');
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                    dashboard.classList.remove('hidden');
-                    dashboard.classList.add('dash-in');
-                }, 600);
-            } else {
+        function showDashboard() {
+            overlay.classList.add('fade-out');
+            setTimeout(() => {
                 overlay.style.display = 'none';
-                dashboard.classList.remove('hidden');
-            }
+                dashboard.style.display = 'block';
+                dashboard.classList.add('dash-in');
+            }, 700);
         }
 
         function attemptLogin() {
@@ -94,13 +90,13 @@
                 loginBtn.textContent = '✔ ACCESS GRANTED';
                 loginBtn.style.borderColor = 'rgba(34,197,94,0.7)';
                 loginBtn.style.color = '#4ade80';
-                loginBtn.style.boxShadow = '0 0 24px rgba(34,197,94,0.4)';
-                setTimeout(() => showDashboard(true), 600);
+                loginBtn.style.boxShadow = '0 0 28px rgba(34,197,94,0.5)';
+                setTimeout(showDashboard, 700);
             } else {
                 errorEl.textContent = '⚠ Invalid credentials';
                 const box = document.getElementById('login-box');
                 box.classList.remove('shake');
-                void box.offsetWidth; // reflow to restart animation
+                void box.offsetWidth;
                 box.classList.add('shake');
                 passInput.value = '';
                 passInput.focus();
@@ -108,8 +104,6 @@
         }
 
         loginBtn.addEventListener('click', attemptLogin);
-
-        // Enter key support
         [userInput, passInput].forEach(el => {
             el.addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); });
         });
