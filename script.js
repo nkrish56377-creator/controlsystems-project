@@ -1,4 +1,4 @@
-const API_URL = 'https://controlsystems-project-1.onrender.com/';
+const API_URL = 'https://controlsystems-project-1.onrender.com';
 
 const parkingLot = document.getElementById('parking-lot');
 const bookButton = document.getElementById('bookButton');
