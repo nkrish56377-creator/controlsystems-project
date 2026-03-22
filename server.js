@@ -1,7 +1,9 @@
 const express = require("express");
 const path = require("path");
+const cors = require("cors");   // ✅ ADD THIS
 
 const app = express();
+app.use(cors());  
 app.use(express.json());
 
 // serve frontend files
